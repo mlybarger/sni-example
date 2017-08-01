@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sy:switchyard xmlns:bean="urn:switchyard-component-bean:config:2.0" xmlns:file="urn:switchyard-component-camel-file:config:2.0" xmlns:http="urn:switchyard-component-http:config:2.0" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:sy="urn:switchyard-config:switchyard:2.0" name="sni-example" targetNamespace="urn::sni-example:1.0">
+  <sca:composite name="sni-example" targetNamespace="urn::sni-example:1.0">
+    <sca:component name="ExampleBean">
+      <bean:implementation.bean class="org.test.ExampleBean"/>
+      <sca:service name="Example">
+        <sca:interface.java interface="org.test.Example"/>
+      </sca:service>
+      <sca:reference name="SniReference">
+        <sca:interface.java interface="org.test.SniReference"/>
+      </sca:reference>
+    </sca:component>
+    <sca:reference name="SniReference" multiplicity="0..1" promote="ExampleBean/SniReference">
+      <sca:interface.java interface="org.test.SniReference"/>
+      <http:binding.http name="http1">
+        <http:address>https://analytics.usa.gov/</http:address>
+        <http:method>GET</http:method>
+      </http:binding.http>
+    </sca:reference>
+    <sca:service name="Example" promote="ExampleBean/Example">
+      <sca:interface.java interface="org.test.Example"/>
+      <file:binding.file name="file1">
+        <file:directory>/tmp</file:directory>
+        <file:fileName>input</file:fileName>
+        <file:consume/>
+      </file:binding.file>
+    </sca:service>
+  </sca:composite>
+</sy:switchyard>
